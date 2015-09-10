@@ -9,8 +9,9 @@ class Snippet(db.Model):
     user = db.Column(db.String())
     path = db.Column(db.String())
     hostname = db.Column(db.String())
-    date_created = db.Column(db.DateTime, default=datetime.datetime.now())
-    date_updated = db.Column(db.DateTime, onupdate=datetime.datetime.now())
+    date_updated = db.Column(db.DateTime,
+                             default=datetime.datetime.now(),
+                             onupdate=datetime.datetime.now())
     
     def __init__(self,
                  snippet_id, data, tags,
