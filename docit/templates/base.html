@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>UseHeadPhones</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="The Pipe Companion website">
+    <!-- styles -->
+    <link rel="stylesheet"
+          href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet"
+          href="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/themes/smoothness/jquery-ui.css">
+    <!-- end styles -->
+    {% block localcss %}
+    {% endblock %}
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+        <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    {% block heading -%}
+    <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse"
+                  data-target=".navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="{{ url_for('index')}}">
+            <img height="35px" alt="Scoiattolo!" src="/static/img/logo.png">
+          </a>
+        </div>
+        <div class="collapse navbar-collapse">
+          <ul class="nav navbar-nav">
+          </ul>
+          <ul class="nav navbar-nav navbar-right">
+          </ul>
+        </div>
+      </div>
+    </div>
+    {% endblock -%}
+    <div class="container" style="margin-top:4%;">
+      {% with messages = get_flashed_messages() %}
+      {% if messages %}
+      <div class="alert alert-info alert-dismissable">
+        <a class="close" data-dismiss="alert" href="#" aria-hidden="true" >&times;</a>
+        {% for message in messages %}
+        {{ message }}
+        {% endfor %}
+      </div>
+      {% endif %}
+      {% endwith %}
+    </div>
+      {% block body -%}
+      {% endblock -%}
+    <hr>
+    <div id="footer">
+      <div class="container">
+        <p align="center">© 2014 <a href="http://www.fabfur.it" target="_blank">fabfur</a></p>
+      </div>
+    </div>
+    <!-- include javascript at the bottom of the body for fun and fast page
+    loading -->
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js"></script>
+    <!-- page-specific js -->
+    {% block localjs %}
+    {% endblock %}
+  </body>
+</html>
+
+
+
+
+
+
