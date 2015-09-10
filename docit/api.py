@@ -8,6 +8,12 @@ parser.add_argument('data',
                     help='Snippet content')
 parser.add_argument('tags',
                     help='List of space separated tags')
+parser.add_argument('user',
+                    help='The username')
+parser.add_argument('path',
+                    help='Current client\'s path')
+parser.add_argument('hostname',
+                    help='Client\'s hostname')
 
 snippet_fields = {
     'id': fields.Integer,
@@ -16,7 +22,6 @@ snippet_fields = {
     'user': fields.String,
     'path': fields.String,
     'hostname': fields.String,
-    'date_created': fields.DateTime,
     'date_updated': fields.DateTime,
 }
 
@@ -29,9 +34,9 @@ def create_snippet(snippet_id, args):
     sn = Snippet(snippet_id,
                  data=args['data'],
                  tags=args['tags'],
-                 user='test user',
-                 path='test path',
-                 hostname='test hostname')
+                 user=args['user'],
+                 path=args['path'],
+                 hostname=args['hostname'])
     db.session.add(sn)
     db.session.commit()
     return sn
