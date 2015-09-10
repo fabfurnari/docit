@@ -1,27 +1,15 @@
-from useheadphones import db
-    
-class AudioFiles(db.Model):
-    __tablename__ = 'AudioFiles'
+from docit import db
+
+class DBSnippet(db.Model):
+    __tablename__ = 'Snippet'
     id = db.Column(db.Integer, primary_key=True)
-    path = db.Column(db.String(120), unique=True)
-    file_hash = db.Column(db.String(), unique=True)
+    data = db.Column(db.String())
+    tags = db.Column(db.String())
     
-    def __init__(self, path, file_hash):
-        self.path = path
-        self.file_hash = file_hash
+    def __init__(self, snippet_id, data, tags):
+        self.id = snippet_id
+        self.data = data
+        self.tags = tags
 
     def __repr__(self):
-        return '<AudioFile %r>' % self.path
-
-class AudioEntry(db.Model):
-    __tablename__ = 'AudioEntry'
-    entry_id = db.Column(db.Integer, db.ForeignKey(AudioFiles.id), primary_key=True)
-    file_type = db.Column(db.String(10))
-
-    def __init__(self, entry_id, file_type):
-        self.entry_id = entry_id
-        self.file_type = file_type
-
-    def __repr__(self):
-        return '<AudioEntry %r>' % self.entry_id
-    
+        return '<Snippet %r>' % self.id
