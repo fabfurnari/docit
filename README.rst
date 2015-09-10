@@ -27,3 +27,5 @@ Features
 * Server stores snippets indexing with tags and renders in HTML
 * Snippets can be modified on server with web interface, then exported with different markups
 * Client sends info about the server name, the user who run, the current path and so on
+* Configurable secure communication between client and server
+* Server has REST interface
