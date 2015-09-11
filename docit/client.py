@@ -23,7 +23,6 @@ def run():
     headers = {'Content-type': 'application/json'}
     if args.dump:
         res = requests.get(url, headers=headers)
-        print res.status_code
         print res.text
         return
     data = json.dumps({"data": args.text,
@@ -32,7 +31,7 @@ def run():
                        "path": os.getcwd(),
                        "hostname": os.uname()[1]
                        })
-    print "Sending to server... %s" % data
+    print "Sending to server... "
     res = requests.post(url, data=data, headers=headers)
     print res.status_code
 
