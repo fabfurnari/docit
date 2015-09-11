@@ -1,5 +1,5 @@
 from docit import api
-from docit.model import db, Snippet
+from docit.model import db, Snippet, Tag
 from flask_restful import Resource, reqparse, abort, fields, marshal_with
 
 parser = reqparse.RequestParser()
@@ -7,6 +7,7 @@ parser.add_argument('data',
                     required=True,
                     help='Snippet content')
 parser.add_argument('tags',
+                    action='append',
                     help='List of space separated tags')
 parser.add_argument('user',
                     help='The username')
@@ -18,7 +19,7 @@ parser.add_argument('hostname',
 snippet_fields = {
     'id': fields.Integer,
     'data': fields.String,
-    'tags': fields.String,
+    'tags': fields.List(fields.String),
     'user': fields.String,
     'path': fields.String,
     'hostname': fields.String,
@@ -31,9 +32,17 @@ def abort_if_not_exists(snippet_id):
         abort(404, message="Snippet %s does not exists" % snippet_id)
 
 def create_snippet(snippet_id, args):
+    tag_list = []
+    for tag in args['tags']:
+        t = Tag.query.filter(Tag.name.like(tag)).first()
+        if not t:
+            t = Tag(name=tag.lower())
+            db.session.add(t)
+        tag_list.append(t)
+            
     sn = Snippet(snippet_id,
                  data=args['data'],
-                 tags=args['tags'],
+                 tags=tag_list,
                  user=args['user'],
                  path=args['path'],
                  hostname=args['hostname'])
