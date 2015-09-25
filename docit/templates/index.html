@@ -3,15 +3,23 @@
 {% block body %}
 
     <div class="container">
-      <h1>Files</h1>
+      <h1>Snippets</h1>
       <table class="table">
-        {% for f in files %}
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Data</th>
+            <th>Tags</th>
+          </tr>
+        </thead>
+        {% for s in snippets %}
         <tr>
+          <td>{{ s.id }}</td>
+          <td>{{ s.data }}</td>
           <td>
-            {{ f.id }}
-          </td>
-          <td>
-            {{ f.path}}
+            {% for t in s.tags %}
+            <span class="label label-info">{{ t.name }}</span>
+            {% endfor %}
           </td>
         </tr>
         {% endfor %}
