@@ -35,5 +35,3 @@ def run():
     res = requests.post(url, data=data, headers=headers)
     print res.status_code
 
-if __name__ == '__main__':
-    run()
