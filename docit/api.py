@@ -26,6 +26,11 @@ snippet_fields = {
     'date_updated': fields.DateTime,
 }
 
+tag_fields = {
+    'id': fields.Integer,
+    'name': fields.String,
+}
+
 def abort_if_not_exists(snippet_id):
     sn = db.session.query(Snippet).filter(Snippet.id == snippet_id).first()
     if not sn:
@@ -99,7 +104,20 @@ class SnippetResource(Resource):
         db.session.delete(sn)
         db.session.commit()
         return {}, 204
+    
+class TagListResource(Resource):
+    @marshal_with(tag_fields)
+    def get(self, tag_name=None):
+        if not tag_name:
+            tag_list = db.session.query(Tag).all()
+        else:
+            tag_list = db.session.query(Tag).filter(Tag.name.startswith(tag_name)).all()
+        return tag_list
 
-
-api.add_resource(SnippetListResource, '/api')
+api.add_resource(SnippetListResource, '/api', '/api/')
 api.add_resource(SnippetResource, '/api/<int:snippet_id>')
+api.add_resource(TagListResource,
+                 '/api/tag',
+                 '/api/tag/',
+                 '/api/tag/<tag_name>')
+
