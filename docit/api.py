@@ -8,6 +8,7 @@ parser.add_argument('data',
                     help='Snippet content')
 parser.add_argument('tags',
                     action='append',
+                    required=True,
                     help='List of space separated tags')
 parser.add_argument('user',
                     help='The username')
@@ -117,7 +118,7 @@ class TagListResource(Resource):
 api.add_resource(SnippetListResource, '/api', '/api/')
 api.add_resource(SnippetResource, '/api/<int:snippet_id>')
 api.add_resource(TagListResource,
-                 '/api/tag',
-                 '/api/tag/',
-                 '/api/tag/<tag_name>')
+                 '/api/tags',
+                 '/api/tags/',
+                 '/api/tags/<tag_name>')
 

@@ -12,19 +12,39 @@ def run():
                         help="Dump the content of db")
     parser.add_argument('--tag', '-t',
                         action='append',
+                        default=['notag'],
                         help='Tags')
+    parser.add_argument('--list-tags',
+                        action='store_true',
+                        help='List tags')
     parser.add_argument('text',
                         nargs='?',
                         help='The text (can be read as stdin)')
     args = parser.parse_args()
-    if not sys.stdin.isatty():
-        args.text = sys.stdin.read()
+    
     url = 'http://localhost:5000/api'
     headers = {'Content-type': 'application/json'}
+    
     if args.dump:
         res = requests.get(url, headers=headers)
         print res.text
         return
+
+    if args.list_tags:
+        print args.list_tags
+        url = "{0}/tags".format(url)
+        res = requests.get(url, headers=headers)
+        print res.text
+        return
+
+    if not args.text:
+        print 'No text to send...'
+        sys.exit(1)
+
+    # we can parse the stdin too!
+    if not sys.stdin.isatty():
+        args.text = sys.stdin.read()
+    
     data = json.dumps({"data": args.text,
                        "tags": args.tag,
                        "user": os.getlogin(),
@@ -35,3 +55,5 @@ def run():
     res = requests.post(url, data=data, headers=headers)
     print res.status_code
 
+if __name__  == '__main__':
+    run()
