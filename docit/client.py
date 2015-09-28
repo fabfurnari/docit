@@ -5,6 +5,10 @@ import sys
 import os
 import json
 
+class DefaultList(list):
+    def __copy__(self):
+        return []
+    
 def run():
     parser = argparse.ArgumentParser(description='Store snippets of documentation')
     parser.add_argument('--dump','-d',
@@ -12,7 +16,7 @@ def run():
                         help="Dump the content of db")
     parser.add_argument('--tag', '-t',
                         action='append',
-                        default=['notag'],
+                        default=DefaultList(['notag']),
                         help='Tags')
     parser.add_argument('--list-tags',
                         action='store_true',
