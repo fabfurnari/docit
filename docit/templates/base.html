@@ -4,12 +4,17 @@
     <meta charset="utf-8">
     <title>DocIt</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="The Pipe Companion website">
+    <meta name="description" content="DocIt">
+    <!--  scripts -->
+
+    <script src="http://code.jquery.com/jquery-2.0.3.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/js/bootstrap-editable.min.js"></script>
+    <!-- end scripts -->
     <!-- styles -->
     <link rel="stylesheet"
           href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
-    <link rel="stylesheet"
-          href="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/themes/smoothness/jquery-ui.css">
+    <link href="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/css/bootstrap-editable.css" rel="stylesheet"/>
     <!-- end styles -->
     {% block localcss %}
     {% endblock %}
@@ -31,7 +36,7 @@
             <span class="icon-bar"></span>
           </button>
           <a class="navbar-brand" href="{{ url_for('index')}}">
-            <img height="35px" alt="Scoiattolo!" src="/static/img/logo.png">
+            <!-- <img height="35px" alt="Scoiattolo!" src="/static/img/logo.png"> -->
           </a>
         </div>
         <div class="collapse navbar-collapse">

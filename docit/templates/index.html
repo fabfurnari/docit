@@ -4,7 +4,7 @@
 
     <div class="container">
       <h1>Snippets</h1>
-      <table class="table">
+      <table id="mainTable" class="table">
         <thead>
           <tr>
             <th>ID</th>
@@ -15,7 +15,7 @@
         {% for s in snippets %}
         <tr>
           <td>{{ s.id }}</td>
-          <td>{{ s.data }}</td>
+          <td><a href="#" id="{{ s.id }}" data-type="text" data-url="/api/">{{ s.data }}</a></td>
           <td>
             {% for t in s.tags %}
             <span class="label label-info">{{ t.name }}</span>
@@ -24,6 +24,48 @@
         </tr>
         {% endfor %}
       </table>
+      <div class="container">
+        <div class="container">
+          <form id="createSnippet" class="form editable" action="/api/">
+            <input id="snippetText" type="text" name="snippet">
+            <button class="btn" value="submit">Submit</button>
+          </form>
+        </div>
+        <div id="result">          
+        </div>
+        <script>
+          $.fn.editable.defaults.mode = 'inline';
+          $(document).ready(function(){
+          $('.editable').editable();
+          });
+          $("#createSnippet").submit(function(event){
+          event.preventDefault();
+          var $form = $(this),
+          textSnippet = $("#snippetText").val(),
+          url = $form.attr("action");
+          
+          var req= {
+          "data": textSnippet,
+          "tags": ["notag"]
+          };
+          var JSONObject = JSON.stringify( req );
+
+          $.ajax({
+          url: url,
+          type: "POST",
+          data : JSONObject,
+          dataType: "json",
+          contentType: "application/json",
+          success: function(data){
+          result = data;
+          row = "<tr><td>" + result.id + "</td><td>" + result.data + "</td><td>" + result.tags[0] + "</td></tr>";
+          $("#mainTable tr:last").after(row);
+          }
+
+          });
+          })
+        </script>
+      </div>
     </div>
 {% endblock -%}
 
