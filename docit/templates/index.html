@@ -15,10 +15,15 @@
         {% for s in snippets %}
         <tr>
           <td>{{ s.id }}</td>
-          <td><a href="#" id="{{ s.id }}" data-type="text" data-url="/api/">{{ s.data }}</a></td>
+          <td><a class="editable-textbox" href="#" id="{{ s.id }}" data-type="textarea" data-url="/api/{{ s.id }}" data-pk="{{ s.id }}" >{{ s.value }}</a></td>
           <td>
             {% for t in s.tags %}
-            <span class="label label-info">{{ t.name }}</span>
+            <a class="editable-tag"
+               data-type="select2"
+               data-value="{{ t.text }}"
+               data-pk="{{ t.id }}"
+               data-url="/api/tags/"
+               data-title="Select tag">{{ t.text }}</a>
             {% endfor %}
           </td>
         </tr>
@@ -33,37 +38,10 @@
         </div>
         <div id="result">          
         </div>
+        {% block localjs %}
+        <script src="static/js/main.js"></script>
+        {% endblock %}
         <script>
-          $.fn.editable.defaults.mode = 'inline';
-          $(document).ready(function(){
-          $('.editable').editable();
-          });
-          $("#createSnippet").submit(function(event){
-          event.preventDefault();
-          var $form = $(this),
-          textSnippet = $("#snippetText").val(),
-          url = $form.attr("action");
-          
-          var req= {
-          "data": textSnippet,
-          "tags": ["notag"]
-          };
-          var JSONObject = JSON.stringify( req );
-
-          $.ajax({
-          url: url,
-          type: "POST",
-          data : JSONObject,
-          dataType: "json",
-          contentType: "application/json",
-          success: function(data){
-          result = data;
-          row = "<tr><td>" + result.id + "</td><td>" + result.data + "</td><td>" + result.tags[0] + "</td></tr>";
-          $("#mainTable tr:last").after(row);
-          }
-
-          });
-          })
         </script>
       </div>
     </div>
