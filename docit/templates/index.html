@@ -9,6 +9,7 @@
           <tr>
             <th>ID</th>
             <th>Data</th>
+            <th>Details</th>
             <th>Tags</th>
             <th>Remove</th>
           </tr>
@@ -22,6 +23,9 @@
                  data-type="textarea"
                  data-url="/api/{{ s.id }}"
                  data-pk="{{ s.id }}" >{{ s.value }}</a>
+          </td>
+          <td>
+            <a href="#">View details</a>
           </td>
           <td>
             {% for t in s.tags %}
