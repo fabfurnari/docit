@@ -21,7 +21,7 @@ Features
 
 * Client should be easily installed
 * Client automatically discovers and connects to server, no need of basic configuration
-* You can set tag on command line (with ``-t`` switch for example)
+* You can set tags on command line (with ``-t`` switch for example)
 * Autocomplete on tags (Ajax / bash autocomplete)
 * Client can accept also standard input
 * Server stores snippets indexing with tags and renders in HTML
