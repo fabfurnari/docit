@@ -10,21 +10,32 @@
             <th>ID</th>
             <th>Data</th>
             <th>Tags</th>
+            <th>Remove</th>
           </tr>
         </thead>
         {% for s in snippets %}
         <tr>
           <td>{{ s.id }}</td>
-          <td><a class="editable-textbox" href="#" id="{{ s.id }}" data-type="textarea" data-url="/api/{{ s.id }}" data-pk="{{ s.id }}" >{{ s.value }}</a></td>
+          <td><a class="editable-textbox"
+                 href="#"
+                 id="{{ s.id }}"
+                 data-type="textarea"
+                 data-url="/api/{{ s.id }}"
+                 data-pk="{{ s.id }}" >{{ s.value }}</a>
+          </td>
           <td>
             {% for t in s.tags %}
             <a class="editable-tag"
+               href="#"
                data-type="select2"
                data-value="{{ t.text }}"
                data-pk="{{ t.id }}"
                data-url="/api/tags/"
                data-title="Select tag">{{ t.text }}</a>
             {% endfor %}
+          </td>
+          <td class="deleterow" id="{{ s.id }}">
+            <div class="glyphicon glyphicon-remove"></div>
           </td>
         </tr>
         {% endfor %}
