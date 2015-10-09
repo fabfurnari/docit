@@ -9,7 +9,7 @@ tagmap = db.Table('tagmap', db.Model.metadata,
 class Snippet(db.Model):
     __tablename__ = 'snippet'
     id = db.Column(db.Integer, primary_key=True)
-    data = db.Column(db.String())
+    value = db.Column(db.String())
     tags = db.relationship('Tag',
                            secondary=tagmap,
                            backref='snippets')
@@ -21,10 +21,10 @@ class Snippet(db.Model):
                              onupdate=datetime.datetime.now())
     
     def __init__(self,
-                 snippet_id, data, tags,
+                 snippet_id, value, tags,
                  user, path, hostname):
         self.id = snippet_id
-        self.data = data
+        self.value = value
         self.tags = tags
         self.user = user
         self.path = path
@@ -37,12 +37,12 @@ class Snippet(db.Model):
 class Tag(db.Model):
     __tablename__ = 'tag'
     id = db.Column(db.Integer, primary_key = True)
-    name = db.Column(db.String(80), unique = True)
+    text = db.Column(db.String(80), unique = True)
 
-    def __init__(self, name):
-        self.name = name
+    def __init__(self, text):
+        self.text = text
 
     def __repr__(self):
-        return '<Tag %r>' % self.name
+        return '<Tag %r>' % self.text
 
     

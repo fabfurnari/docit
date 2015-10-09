@@ -49,14 +49,14 @@ def run():
     if not sys.stdin.isatty():
         args.text = sys.stdin.read()
     
-    data = json.dumps({"data": args.text,
-                       "tags": args.tag,
-                       "user": os.getlogin(),
-                       "path": os.getcwd(),
-                       "hostname": os.uname()[1]
-                       })
+    snippet = json.dumps({"value": args.text,
+                          "tags": args.tag,
+                          "user": os.getlogin(),
+                          "path": os.getcwd(),
+                          "hostname": os.uname()[1]
+                          })
     print "Sending to server... "
-    res = requests.post(url, data=data, headers=headers)
+    res = requests.post(url, data=snippet, headers=headers)
     print res.status_code
 
 if __name__  == '__main__':

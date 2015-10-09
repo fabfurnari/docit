@@ -3,12 +3,12 @@ from docit.model import db, Snippet, Tag
 from flask_restful import Resource, reqparse, abort, fields, marshal_with
 
 parser = reqparse.RequestParser()
-parser.add_argument('data',
+parser.add_argument('value',
                     required=True,
                     help='Snippet content')
 parser.add_argument('tags',
                     action='append',
-                    required=True,
+                    required=False,
                     help='List of space separated tags')
 parser.add_argument('user',
                     help='The username')
@@ -19,7 +19,7 @@ parser.add_argument('hostname',
 
 snippet_fields = {
     'id': fields.Integer,
-    'data': fields.String,
+    'value': fields.String,
     'tags': fields.List(fields.String),
     'user': fields.String,
     'path': fields.String,
@@ -29,7 +29,7 @@ snippet_fields = {
 
 tag_fields = {
     'id': fields.Integer,
-    'name': fields.String,
+    'text': fields.String,
 }
 
 def abort_if_not_exists(snippet_id):
@@ -40,14 +40,16 @@ def abort_if_not_exists(snippet_id):
 def create_snippet(snippet_id, args):
     tag_list = []
     for tag in args['tags']:
-        t = Tag.query.filter(Tag.name.like(tag)).first()
+        t = Tag.query.filter(Tag.text.like(tag)).first()
         if not t:
-            t = Tag(name=tag.lower())
+            t = Tag(text=tag.lower())
             db.session.add(t)
         tag_list.append(t)
+
+    print args['value']
             
     sn = Snippet(snippet_id,
-                 data=args['data'],
+                 value=args['value'],
                  tags=tag_list,
                  user=args['user'],
                  path=args['path'],
@@ -90,7 +92,7 @@ class SnippetResource(Resource):
         '''
         args = parser.parse_args()
         sn = db.session.query(Snippet).filter(Snippet.id == snippet_id).first()
-        sn.data = args['data']
+        sn.value = args['value']
         db.session.add(sn)
         db.session.commit()
         return sn, 201
@@ -112,7 +114,7 @@ class TagListResource(Resource):
         if not tag_name:
             tag_list = db.session.query(Tag).all()
         else:
-            tag_list = db.session.query(Tag).filter(Tag.name.startswith(tag_name)).all()
+            tag_list = db.session.query(Tag).filter(Tag.text.startswith(tag_name)).all()
         return tag_list
 
 api.add_resource(SnippetListResource, '/api', '/api/')
