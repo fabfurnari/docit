@@ -29,3 +29,29 @@ Features
 * Client sends info about the server name, the user who run, the current path and so on
 * Configurable secure communication between client and server
 * Server has REST interface
+
+Installation
+------------
+
+TODO
+
+Usage
+-----
+
+Client
+======
+
+You can use docit with it's own client like
+
+``$ docit 'somerandomstuff'``
+
+Or setting tags:
+
+``$ docit -t working 'somerandomstuff'``
+
+REST API
+========
+
+Or you can use the REST APIs:
+
+``$ curl http://localhost:5000/api/``
