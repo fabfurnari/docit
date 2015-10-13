@@ -29,6 +29,7 @@ Features
 * Client sends info about the server name, the user who run, the current path and so on
 * Configurable secure communication between client and server
 * Server has REST interface
+* Server response can be filtered, paginated and sorted with http parameters
 
 Installation
 ------------
