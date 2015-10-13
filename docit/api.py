@@ -142,6 +142,9 @@ class SnippetResource(Resource):
         db.session.commit()
         return {}, 204
 
+    def post(self, snippet_id):
+        abort(405, message="Method not allowed")
+
 @api.route('/api/tags','/api/tags/','/api/tags/<tag_name>')
 class TagListResource(Resource):
     @marshal_with(tag_fields)
