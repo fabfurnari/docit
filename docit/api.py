@@ -1,3 +1,4 @@
+import types
 from docit import api
 from docit.model import db, Snippet, Tag
 from flask_restful import Resource, reqparse, abort, fields, marshal_with
@@ -23,6 +24,17 @@ tag_fields = {
     'id': fields.Integer,
     'text': fields.String,
 }
+
+def api_route(self, *args, **kwargs):
+    '''
+    To route api's endpoint like flask standard ones.
+    From: http://flask.pocoo.org/snippets/129/
+    '''
+    def wrapper(cls):
+        self.add_resource(cls, *args, **kwargs)
+        return cls
+    return wrapper
+api.route = types.MethodType(api_route, api)
 
 def abort_if_not_exists(snippet_id):
     '''
@@ -57,7 +69,8 @@ def create_snippet(snippet_id, args):
     db.session.add(sn)
     db.session.commit()
     return sn
- 
+
+@api.route('/api','/api/')
 class SnippetListResource(Resource):
     '''
     Get full list of snippets or create a new snippet (id picked automatically)
@@ -84,6 +97,7 @@ class SnippetListResource(Resource):
         sn = create_snippet(snippet_id, args)
         return sn, 201
 
+@api.route('/api/<int:snippet_id>')
 class SnippetResource(Resource):
     @marshal_with(snippet_fields)
     def get(self, snippet_id):
@@ -116,7 +130,8 @@ class SnippetResource(Resource):
         db.session.delete(sn)
         db.session.commit()
         return {}, 204
-    
+
+@api.route('/api/tags','/api/tags/','/api/tags/<tag_name>')
 class TagListResource(Resource):
     @marshal_with(tag_fields)
     def get(self, tag_name=None):
@@ -125,11 +140,4 @@ class TagListResource(Resource):
         else:
             tag_list = db.session.query(Tag).filter(Tag.text.startswith(tag_name)).all()
         return tag_list
-
-api.add_resource(SnippetListResource, '/api', '/api/')
-api.add_resource(SnippetResource, '/api/<int:snippet_id>')
-api.add_resource(TagListResource,
-                 '/api/tags',
-                 '/api/tags/',
-                 '/api/tags/<tag_name>')
 
