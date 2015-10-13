@@ -39,6 +39,8 @@ def abort_if_not_exists(snippet_id):
 
 def create_snippet(snippet_id, args):
     tag_list = []
+    if not args['tags']:
+        args['tags'] = ['notag']
     for tag in args['tags']:
         t = Tag.query.filter(Tag.text.like(tag)).first()
         if not t:
