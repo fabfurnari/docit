@@ -3,19 +3,11 @@ from docit.model import db, Snippet, Tag
 from flask_restful import Resource, reqparse, abort, fields, marshal_with
 
 parser = reqparse.RequestParser()
-parser.add_argument('value',
-                    required=True,
-                    help='Snippet content')
-parser.add_argument('tags',
-                    action='append',
-                    required=False,
-                    help='List of space separated tags')
-parser.add_argument('user',
-                    help='The username')
-parser.add_argument('path',
-                    help='Current client\'s path')
-parser.add_argument('hostname',
-                    help='Client\'s hostname')
+parser.add_argument('value', required=True, help='Snippet content')
+parser.add_argument('tags', action='append', required=False, help='List of space separated tags')
+parser.add_argument('user', help='The username')
+parser.add_argument('path', help='Current client\'s path')
+parser.add_argument('hostname', help='Client\'s hostname')
 
 snippet_fields = {
     'id': fields.Integer,
@@ -33,14 +25,22 @@ tag_fields = {
 }
 
 def abort_if_not_exists(snippet_id):
+    '''
+    Helper function
+    '''
     sn = db.session.query(Snippet).filter(Snippet.id == snippet_id).first()
     if not sn:
         abort(404, message="Snippet %s does not exists" % snippet_id)
 
 def create_snippet(snippet_id, args):
+    '''
+    Actually create the snippet
+    '''
     tag_list = []
+    
     if not args['tags']:
         args['tags'] = ['notag']
+        
     for tag in args['tags']:
         t = Tag.query.filter(Tag.text.like(tag)).first()
         if not t:
@@ -48,8 +48,6 @@ def create_snippet(snippet_id, args):
             db.session.add(t)
         tag_list.append(t)
 
-    print args['value']
-            
     sn = Snippet(snippet_id,
                  value=args['value'],
                  tags=tag_list,
@@ -61,8 +59,14 @@ def create_snippet(snippet_id, args):
     return sn
  
 class SnippetListResource(Resource):
+    '''
+    Get full list of snippets or create a new snippet (id picked automatically)
+    '''
     @marshal_with(snippet_fields)
     def get(self):
+        '''
+        Get all snippets
+        '''
         l = db.session.query(Snippet).all()
         return l
 
@@ -83,6 +87,9 @@ class SnippetListResource(Resource):
 class SnippetResource(Resource):
     @marshal_with(snippet_fields)
     def get(self, snippet_id):
+        '''
+        Get single snippet
+        '''
         abort_if_not_exists(snippet_id)
         s = db.session.query(Snippet).filter(Snippet.id == snippet_id).first()
         return s
