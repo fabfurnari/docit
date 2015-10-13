@@ -1,4 +1,5 @@
 import types
+import json
 from docit import api
 from docit.model import db, Snippet, Tag
 from flask_restful import Resource, reqparse, abort, fields, marshal_with
@@ -81,7 +82,7 @@ class SnippetListResource(Resource):
         Get all snippets
         '''
         l = db.session.query(Snippet).all()
-        return l
+        return l, 200
 
     @marshal_with(snippet_fields)
     def post(self):
@@ -96,6 +97,16 @@ class SnippetListResource(Resource):
             snippet_id = 0
         sn = create_snippet(snippet_id, args)
         return sn, 201
+
+    def delete(self):
+        '''
+        Deletes all snippets
+        TODO: use confirmation mechanisms
+        '''
+        deleted_rows = db.session.query(Snippet).delete()
+        db.session.commit()
+        return json.dumps({'value': 'All {} snippets deleted'.format(deleted_rows)}), 200
+        
 
 @api.route('/api/<int:snippet_id>')
 class SnippetResource(Resource):
