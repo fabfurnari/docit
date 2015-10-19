@@ -56,3 +56,12 @@ REST API
 Or you can use the REST APIs:
 
 ``$ curl http://localhost:5000/api/``
+
+Examples
+========
+
+* Filter the result (by value): 
+* Sort the result by id: ``curl http://localhost:5000/api/ -G -d "sorting=id"``
+* Sort the result by value: ``curl http://localhost:5000/api/ -G -d "sorting=value"``
+* Paginate the result with 2 items per page: ``curl http://localhost:5000/api/ -G -d "paginate=2``
+* Paginate the result with 2 items per page and starting at page 3, sorting by id: ``curl http://localhost:5000/api/ -G -d "paginate=2 -d "offset=3" -d "sorting=id"``

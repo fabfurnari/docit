@@ -73,15 +73,40 @@ def create_snippet(snippet_id, args):
 @api.route('/api','/api/')
 class SnippetListResource(Resource):
     '''
-    Get full list of snippets or create a new snippet (id picked automatically)
+    Get full list of snippets or create a new snippet
     '''
     @marshal_with(snippet_fields)
     def get(self):
         '''
         Get all snippets
         '''
-        l = db.session.query(Snippet).all()
-        return l, 200
+        p = reqparse.RequestParser()
+        p.add_argument('sorting', default='id')
+        p.add_argument('reverse', default=False)
+        p.add_argument('paginate', type=int)
+        p.add_argument('offset', type=int, default=1)
+        p.add_argument('filter')
+        a = p.parse_args()
+
+        column_sort = getattr(Snippet, a['sorting'])
+        query_filter = Snippet.value.like("%{}%".format(a['filter']))
+        
+        if not a['filter']:
+            q = Snippet.query
+        else:
+            q = Snippet.query.filter(query_filter)
+
+        if a['reverse']:
+            q = q.order_by(column_sort.desc())
+        else:
+            q = q.order_by(column_sort.asc())
+
+        if a['paginate']:
+            q = q.paginate(a['offset'], a['paginate'], False).items
+        else:
+            q = q.all()
+            
+        return q, 200
 
     @marshal_with(snippet_fields)
     def post(self):
