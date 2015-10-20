@@ -1,7 +1,10 @@
 import types
-from docit import api
+
+from docit import api, app
 from docit.model import db, Snippet, Tag
 from flask_restful import Resource, reqparse, abort, fields, marshal_with
+
+log = app.logger
 
 parser = reqparse.RequestParser()
 parser.add_argument('value', required=True, help='Snippet content')
@@ -42,7 +45,9 @@ def abort_if_not_exists(snippet_id):
     '''
     sn = db.session.query(Snippet).filter(Snippet.id == snippet_id).first()
     if not sn:
-        abort(404, message="Snippet %s does not exists" % snippet_id)
+        m = "Snippet %s does not exists" % snippet_id
+        log.error(m)
+        abort(404, message=m)
 
 def create_snippet(snippet_id, args):
     '''
@@ -51,12 +56,14 @@ def create_snippet(snippet_id, args):
     tag_list = []
     
     if not args['tags']:
+        log.debug('No tags, applying the default \'notag\' tag')
         args['tags'] = ['notag']
         
     for tag in args['tags']:
         t = Tag.query.filter(Tag.text.like(tag)).first()
         if not t:
             t = Tag(text=tag.lower())
+            log.info('New tag found %s, adding to our database' % t)
             db.session.add(t)
         tag_list.append(t)
 
@@ -67,6 +74,7 @@ def create_snippet(snippet_id, args):
                  path=args['path'],
                  hostname=args['hostname'])
     db.session.add(sn)
+    log.info('Adding snippet %s ' % sn)
     db.session.commit()
     return sn
 
@@ -80,6 +88,7 @@ class SnippetListResource(Resource):
         '''
         Get all snippets
         '''
+        log.debug('Getting snippet list')
         p = reqparse.RequestParser()
         p.add_argument('sorting', default='id')
         p.add_argument('reverse', default=False)
@@ -87,6 +96,7 @@ class SnippetListResource(Resource):
         p.add_argument('offset', type=int, default=1)
         p.add_argument('filter')
         a = p.parse_args()
+        log.debug('List of args: %s' % a)
 
         column_sort = getattr(Snippet, a['sorting'])
         query_filter = Snippet.value.like("%{}%".format(a['filter']))
@@ -105,7 +115,8 @@ class SnippetListResource(Resource):
             q = q.paginate(a['offset'], a['paginate'], False).items
         else:
             q = q.all()
-            
+
+        log.debug('Returning snippets: %s' % q)
         return q, 200
 
     @marshal_with(snippet_fields)
@@ -113,13 +124,17 @@ class SnippetListResource(Resource):
         '''
         Create snippet
         '''
+        log.debug('Creating new snippet')
         args = parser.parse_args()
+        log.debug('Args: %s' % args)
         id_list = [x for x, in db.session.query(Snippet.id).all()]
         if id_list:
             snippet_id = int(max(id_list) + 1)
         else:
             snippet_id = 0
+            log.info('Creating snippet in empty bucket')
         sn = create_snippet(snippet_id, args)
+        log.debug('Snippet %s created' % sn)
         return sn, 201
 
     def delete(self):
@@ -127,6 +142,7 @@ class SnippetListResource(Resource):
         Deletes all snippets
         TODO: use confirmation mechanisms
         '''
+        log.warning('Deleting all snippets!')
         deleted_rows = db.session.query(Snippet).delete()
         db.session.commit()
         return {'value': 'All {} snippets deleted'.format(deleted_rows)}, 200        
@@ -138,20 +154,25 @@ class SnippetResource(Resource):
         '''
         Get single snippet
         '''
+        log.debug('Getting single snippet')
         abort_if_not_exists(snippet_id)
         s = db.session.query(Snippet).filter(Snippet.id == snippet_id).first()
-        return s
+        log.debug('Snippet %s ' % s)
+        return s, 200
 
     @marshal_with(snippet_fields)
     def put(self, snippet_id):
         '''
         Update snippet
         '''
+        log.debug('Updating snippet')
         args = parser.parse_args()
         sn = db.session.query(Snippet).filter(Snippet.id == snippet_id).first()
+        log.info('Updating snippet %s' % sn)
         sn.value = args['value']
         db.session.add(sn)
         db.session.commit()
+        log.debug('Updated snuppet %s' % sn)
         return sn, 201
 
     @marshal_with(snippet_fields)
@@ -159,22 +180,27 @@ class SnippetResource(Resource):
         '''
         Delete snippet
         '''
+        log.debug('Deleting snippet')
         abort_if_not_exists(snippet_id)
         sn = db.session.query(Snippet).filter(Snippet.id == snippet_id).first()
+        log.warning('Deleting snippet %s' % sn)
         db.session.delete(sn)
         db.session.commit()
+        log.debug('Snippet %s deleted' % sn)
         return {}, 204
 
     def post(self, snippet_id):
+        log.error('Method POST not allowed here')
         abort(405, message="Method not allowed")
 
 @api.route('/api/tags','/api/tags/','/api/tags/<tag_name>')
 class TagListResource(Resource):
     @marshal_with(tag_fields)
     def get(self, tag_name=None):
+        log.debug('Getting tag list')
         if not tag_name:
             tag_list = db.session.query(Tag).all()
         else:
             tag_list = db.session.query(Tag).filter(Tag.text.startswith(tag_name)).all()
+        log.debug('Tag list: %s' % tag_list)
         return tag_list
-
