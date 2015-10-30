@@ -19,6 +19,7 @@
     <link href="//cdnjs.cloudflare.com/ajax/libs/select2/4.0.0/css/select2.min.css" rel="stylesheet" />
     <!-- end styles -->
     {% block localcss %}
+    <link href="/static/css/custom.css" rel="stylesheet" />
     {% endblock %}
     <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
     <!--[if lt IE 9]>
@@ -37,9 +38,9 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="{{ url_for('index')}}">
-            <!-- <img height="35px" alt="Scoiattolo!" src="/static/img/logo.png"> -->
-          </a>
+            <a class="navbar-brand" href="{{ url_for('index')}}">
+              <img height="25px" alt="Scoiattolo!" src="/static/img/squirrel-logo.gif">
+            </a>
         </div>
         <div class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
@@ -65,11 +66,11 @@
       {% block body -%}
       {% endblock -%}
     <hr>
-    <div id="footer">
+    <footer class="footer">
       <div class="container">
-        <p align="center">© 2015 <a href="http://www.fabfur.it" target="_blank">fabfur</a></p>
+        <p class="text-muted" align="center">© 2015 <a href="http://www.fabfur.it" target="_blank">fabfur</a></p>
       </div>
-    </div>
+    </footer>
     <!-- include javascript at the bottom of the body for fun and fast page
     loading -->
     <!-- page-specific js -->
@@ -77,9 +78,3 @@
     {% endblock %}
   </body>
 </html>
-
-
-
-
-
-
