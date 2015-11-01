@@ -7,5 +7,6 @@ log = app.logger
 @app.route('/')
 def index():
     sn = db.session.query(Snippet).all()
-    return render_template('index.html', snippets=sn)
+    tags = db.session.query(Tag).all()
+    return render_template('index.html', snippets=sn, tags=tags)
 

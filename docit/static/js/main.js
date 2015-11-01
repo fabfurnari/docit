@@ -2,7 +2,6 @@ $(document).ready(function(){
     $('.deleterow').unbind('click').bind('click', function(){
         var $r_id = $(this).attr('id');
         if (confirm("Removing snippet " + $r_id + "\nAre you sure?")) {
-            console.log("delete");
             var $killrow = $(this).parent('tr');
             $killrow.addClass("danger");
             $killrow.fadeOut(2000, function(){
@@ -10,7 +9,6 @@ $(document).ready(function(){
                     url: '/api/' + $r_id,
                     type: 'DELETE',
                     success: function(result) {
-                        console.log("success");
                         $(this).remove();
                     }
                 });
@@ -39,5 +37,23 @@ $(document).ready(function(){
                 },
             },
         }
+    });
+    $('#snippetButton').unbind('click').bind('click', function(){
+        if ($("#snippetForm")[0].checkValidity()){
+            var payload = {"value": $('#snippetText').val()};
+            $.ajax({
+                type: 'post',
+                url: "/api/",
+                dataType: 'json',
+                contentType: 'application/json',
+                data: JSON.stringify(payload),
+                success: function(msg){
+                    location.reload();
+                },
+                error: function(msg){
+                    console.log("error "+msg);
+                },
+            });
+        }else console.log("Invalid form");
     });
 });

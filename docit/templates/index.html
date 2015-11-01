@@ -1,7 +1,6 @@
 {% extends "base.html" %}
 
 {% block body %}
-
     <div class="container">
       <h1>Snippets</h1>
       <table id="mainTable" class="table">
@@ -46,20 +45,19 @@
       </table>
       <div class="container">
         <div class="container">
-          <form id="createSnippet" class="form editable" action="/api/">
-            <input id="snippetText" type="text" name="snippet">
-            <button class="btn" value="submit">Submit</button>
+          <form id="snippetForm" class="form" action="">
+            <input id="snippetText" type="text" name="snippet" placeholder="Insert snippet here" required />
+            <select id="snippetTags" type="multi" name="tags">
+              {% for t in tags %}
+              <option value="{{ t.id }}">{{ t.text }}</option>
+              {% endfor %}
+            </select>
+            <button id="snippetButton" class="btn" value="submit">Submit</button>
           </form>
-        </div>
-        <div id="result">          
         </div>
         {% block localjs %}
         <script src="static/js/main.js"></script>
         {% endblock %}
-        <script>
-        </script>
       </div>
     </div>
 {% endblock -%}
-
-
