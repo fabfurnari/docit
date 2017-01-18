@@ -16,31 +16,37 @@ So you postpone and soon you forget what you did, because you have tons of other
 
 I don't think I can find a real solution for this problem, is all about self-discipline, but I can relieve the burden. With DocIt you write snippets of documentation, thoughts and all sort of stuff you want directly from the command line (or a web interface, if you want). This then goes to a bucket where it is stored and tagged, ready to be pigeonholed later, when you have time.
 
-Features
---------
+Features/goals
+--------------
 
-* Client should be easily installed
-* Client automatically discovers and connects to server, no need of basic configuration
-* You can set tags on command line (with ``-t`` switch for example)
-* Autocomplete on tags (Ajax / bash autocomplete)
-* Client can accept also standard input
-* Server stores snippets indexing with tags and renders in HTML
-* Snippets can be modified on server with web interface, then exported with different markups
-* Client sends info about the server name, the user who run, the current path and so on
-* Configurable secure communication between client and server
-* Server has REST interface
-* Server response can be filtered, paginated and sorted with http parameters
+* [] Client should be easily installed
+* [] Client automatically discovers and connects to server, no need for basic configuration
+* [X] You can set tags on command line (with ``-t`` switch for example)
+* [] Autocomplete on tags (Ajax / bash autocomplete)
+* [] Client can accept also standard input
+* [] Server stores snippets indexing with tags and renders in HTML
+* [] Snippets can be modified on server with web interface, then exported with different markups
+* [] Client sends info about the server name, the user who run, the current path and so on
+* [] Configurable secure communication between client and server
+* [X] Server has REST interface
+* [X] Server response can be filtered, paginated and sorted with http parameters
 
 Installation
 ------------
 
+Client
+^^^^^^
+
 TODO
+
+Server
+^^^^^^
 
 Usage
 -----
 
 Client
-======
+^^^^^^
 
 You can use docit with it's own client like
 
@@ -51,14 +57,14 @@ Or setting tags:
 ``$ docit -t working 'somerandomstuff'``
 
 REST API
-========
+^^^^^^^^
 
 Or you can use the REST APIs:
 
 ``$ curl http://localhost:5000/api/``
 
 Examples
-========
+^^^^^^^^
 
 * Filter the result (by value): 
 * Sort the result by id: ``curl http://localhost:5000/api/ -G -d "sorting=id"``
