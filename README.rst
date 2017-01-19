@@ -19,15 +19,15 @@ I don't think I can find a real solution for this problem, is all about self-dis
 Features/goals
 --------------
 
-* [] Client should be easily installed
-* [] Client automatically discovers and connects to server, no need for basic configuration
+* [ ] Zero-dependency and simply installable client (python2/3)
+* [ ] Client automatically discovers and connects to server, no need for basic configuration
 * [X] You can set tags on command line (with ``-t`` switch for example)
-* [] Autocomplete on tags (Ajax / bash autocomplete)
-* [] Client can accept also standard input
-* [] Server stores snippets indexing with tags and renders in HTML
-* [] Snippets can be modified on server with web interface, then exported with different markups
-* [] Client sends info about the server name, the user who run, the current path and so on
-* [] Configurable secure communication between client and server
+* [ ] Autocomplete on tags (Ajax / bash autocomplete)
+* [ ] Client can accept also standard input
+* [ ] Server stores snippets indexing with tags and renders in HTML
+* [ ] Snippets can be modified on server with web interface, then exported with different markups
+* [ ] Client sends info about the server name, the user who run, the current path and so on
+* [ ] Configurable secure communication between client and server
 * [X] Server has REST interface
 * [X] Server response can be filtered, paginated and sorted with http parameters
 
