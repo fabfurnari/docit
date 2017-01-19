@@ -12,11 +12,14 @@ except ImportError:
     import ConfigParser as configparser
 
 try:
-    from urllib.request import urlopen
+    from urllib.request import Request, urlopen
     from urllib.parse import urlparse
+    from urllib.parse import urlencode
 except ImportError:
-    from urllib import urlopen
+    from urllib2 import Request, urlopen
     from urlparse import urlparse
+    from urllib import urlencode
+    
 
 # from documentation examples
 log = logging.getLogger(__name__)
@@ -90,15 +93,16 @@ def run():
     url = get_server_url()
     headers = {'Content-type': 'application/json'}
     if args.dump:
-        res = requests.get(url, headers=headers)
-        print(res.text)
+        req = Request(url)
+        res = urlopen(req)
+        print(res.read().decode('utf-8'))
         return
 
     if args.list_tags:
-        print(args.list_tags)
         url = "{0}/tags".format(url)
-        res = requests.get(url, headers=headers)
-        print(res.text)
+        req = Request(url)
+        res = urlopen(req)
+        print(res.read().decode('utf-8'))
         return
 
     if not args.text:
@@ -121,6 +125,17 @@ def run():
 
 if __name__  == '__main__':
     run()
+
+
+
+
+
+
+
+
+
+
+
 
 
 
