@@ -55,6 +55,29 @@
             <button id="snippetButton" class="btn" value="submit">Submit</button>
           </form>
         </div>
+        <div class="pagination pagination-right">
+          <ul>
+            <li {% if not pagination.prev_page %} class="disabled"{% endif %}>
+              <a{% if pagination.prev_page %} href="{{ url_for('index', page=pagination.prev_page) }}"{% endif %}>prev</a>
+            </li>
+            <b>debug: {{ pagination }}</b>
+            {% for page in pagination.pages %}
+            {% set url_paged = url_for('index', page=page) %}
+            {% set url_not_paged = url_for('index') %}
+
+            {% for s in snippets %}
+            <p>{{ s.value }}</p>
+            {% endfor %}
+
+            <li {% if page == pagination.current_page %}class="active"{% endif %}>
+              <a {% if page != pagination.current_page %}href="{% if page == 1 %}{{ url_not_paged }}{% else %}{{ url_paged }}{% endif %}"{% endif %}>{{ page }}</a>
+            </li>
+            {% endfor %}
+            <li {% if not pagination.next_page %}class="disabled"{% endif %}>
+              <a {% if pagination.next_page %}href="{{ url_for('index', page=pagination.next_page) }}"{% endif %}>Next</a>
+            </li>
+          </ul>
+        </div>
         {% block localjs %}
         <script src="static/js/main.js"></script>
         {% endblock %}
