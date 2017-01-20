@@ -7,3 +7,4 @@ TODO
 * Better client
 * Api versioning in url
 * Use of buckets
+* Rewrite backend using bottle

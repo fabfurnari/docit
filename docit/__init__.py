@@ -1,7 +1,6 @@
-from flask import Flask
-from flask.ext.sqlalchemy import SQLAlchemy
-from flask_restful import Api
+from bottle import Bottle, request
 
-app = Flask(__name__)
-db = SQLAlchemy(app)
-api = Api(app)
+app = Bottle()
+db = 
+
+

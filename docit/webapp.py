@@ -1,8 +1,7 @@
 from docit import app
-from flask import render_template
-from docit.model import db, Snippet, Tag
+#from docit.model import db, Snippet, Tag
 
-log = app.logger
+#log = app.logger
 
 @app.route('/')
 def index():
@@ -10,3 +9,5 @@ def index():
     tags = db.session.query(Tag).all()
     return render_template('index.html', snippets=sn, tags=tags)
 
+if __name__ == '__main__':
+    app.run(debug=True)
