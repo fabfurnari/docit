@@ -1,8 +1,5 @@
 BINARY=docit
 LDFLAGS=-ldflags "-s -w"
-export GOOS = linux
-export GOARCH = arm
-export GOARM = 5
 
 .DEFAULT_GOAL: $(BINARY)
 
