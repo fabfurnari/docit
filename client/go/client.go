@@ -1,55 +1,39 @@
 package main
 
 import (
+	"encoding/json"
+	"flag"
 	"fmt"
 	"io/ioutil"
-	"os/user"
-	"path/filepath"
-	"runtime"
+	"log"
 )
 
-type config struct{
-	ServerUrl   string
-	ServerToken string
+type Configuration struct {
+	ServerUrl  string `json:"server_url"`
+	ServerPort int    `json:"server_port"`
 }
 
-var flagVersion bool
-var version = "0.1"
+func LoadConfig(path string) Configuration {
+	file, err := ioutil.ReadFile(path)
 
-func init() {
-	read_configurations()
+	if err != nil {
+		log.Fatal("Config file missing: ", err)
+	}
+	var config Configuration
+
+	err = json.Unmarshal(file, &config)
+
+	if err != nil {
+		log.Fatal("Config parse error: ", err)
+	}
+
+	return config
 }
 
-func config_files() []string {
-	// list possible configuration files
-	config_files := []string{}
-
-	if runtime.GOOS == "linux" {
-		config_files = append(config_files, "/etc/docit.conf")
-	}
-
-	usr, err := user.Current()
-	if err == nil {
-		config_files = append(config_files, filepath.Join(usr.HomeDir, ".docit.conf"))
-	}
-
-	config_files = append(config_files, ".docit.conf")
-
-	return config_files
-}
-
-func read_configurations() {
-	config_files := config_files()
-
-	for _, file := range config_files {
-		err := read_configuration(file)
-	}
-}
-
-func read_configuration(filename string) error {
-	data, error := ioutil.ReadFile(filename)
-	if error != nil {
-		return nil
-	}
-
+func main() {
+	configurationFile := flag.String("config", "~/.docit.json", "Configuration file. Default: ~/.docit.json")
+	flag.Parse()
+	config := LoadConfig(*configurationFile)
+	fmt.Println(config.ServerUrl)
+	fmt.Println(config.ServerPort)
 }
