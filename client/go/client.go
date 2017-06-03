@@ -37,7 +37,8 @@ func main() {
 		text string
 	)
 
-	configurationFile := flag.String("config", "~/.docit.json", "Configuration file. Default: ~/.docit.json")
+	defaultConfigFile := fmt.Sprintf("%s/%s", os.Getenv("HOME"), ".docit.json")
+	configurationFile := flag.String("config", defaultConfigFile, "Configuration file. Default: ~/.docit.json")
 	flagTag := flag.String("tags", "", "List of tags (comma separed)")
 	flag.Parse()
 
