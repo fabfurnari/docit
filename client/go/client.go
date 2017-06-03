@@ -63,7 +63,12 @@ func main() {
 	)
 	configFlag := flag.String("config", "", "Configuration file. Default: ~/.docit.json")
 	flagTag := flag.String("tags", "", "List of tags (comma separed)")
+	flagVerbose := flag.Bool("v", false, "Turn on verbose logging")
 	flag.Parse()
+
+	if !*flagVerbose {
+		log.SetOutput(ioutil.Discard)
+	}
 
 	f, err := os.Stdin.Stat()
 	if err != nil {
