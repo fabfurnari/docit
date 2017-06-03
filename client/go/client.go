@@ -15,6 +15,31 @@ type Configuration struct {
 	ServerPort int    `json:"server_port"`
 }
 
+func GetDefaultConfigFile() (string, error) {
+	// Currently error not populated
+	// maybe in the future
+	defaultConfigFile := fmt.Sprintf("%s/%s", os.Getenv("HOME"), ".docit.json")
+	return defaultConfigFile, nil
+}
+
+func GetConfigurationFile(configFlag *string) (string, error) {
+	// Set configuration file order
+	if *configFlag != "" {
+		log.Println("Using flag for config file: ", *configFlag)
+		return *configFlag, nil
+	} else if envConf := os.Getenv("DOCIT_CONF"); envConf != "" {
+		log.Println("Using envvar for config file")
+		return envConf, nil
+	} else {
+		log.Println("Using default config file")
+		c, err := GetDefaultConfigFile()
+		if err != nil {
+			return "", err
+		}
+		return c, nil
+	}
+}
+
 func LoadConfig(path string) Configuration {
 	file, err := ioutil.ReadFile(path)
 
@@ -36,9 +61,7 @@ func main() {
 	var (
 		text string
 	)
-
-	defaultConfigFile := fmt.Sprintf("%s/%s", os.Getenv("HOME"), ".docit.json")
-	configurationFile := flag.String("config", defaultConfigFile, "Configuration file. Default: ~/.docit.json")
+	configFlag := flag.String("config", "", "Configuration file. Default: ~/.docit.json")
 	flagTag := flag.String("tags", "", "List of tags (comma separed)")
 	flag.Parse()
 
@@ -60,7 +83,12 @@ func main() {
 		log.Fatal("You must specify some text")
 	}
 
-	config := LoadConfig(*configurationFile)
+	configFile, err := GetConfigurationFile(configFlag)
+	if err != nil {
+		log.Fatal("Cannot get configuration!")
+	}
+	log.Println("Using configuration file: ", configFile)
+	config := LoadConfig(configFile)
 	tags := strings.Split(*flagTag, ",")
 
 	fmt.Println(config.ServerUrl, tags, text)
