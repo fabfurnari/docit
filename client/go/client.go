@@ -1,11 +1,13 @@
 package main
 
 import (
+	"bytes"
 	"encoding/json"
 	"flag"
 	"fmt"
 	"io/ioutil"
 	"log"
+	"net/http"
 	"os"
 	"strings"
 )
@@ -57,6 +59,24 @@ func LoadConfig(path string) Configuration {
 	return config
 }
 
+func PerformRequest(url string, text string) (statusCode string, err error) {
+	log.Printf("Performing request %s to %s", text, url)
+	req, err := http.NewRequest("POST", url, bytes.NewBufferString(text))
+	req.Header.Set("Content-Type", "application/json")
+
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		log.Println("Error while performing request: ", err)
+		return "", err
+	}
+	defer resp.Body.Close()
+	log.Println("Response headers: ", resp.Header)
+	log.Println("Response code: ", resp.Status)
+	return resp.Status, nil
+	
+}
+
 func main() {
 	var (
 		text string
@@ -77,14 +97,14 @@ func main() {
 
 	if lText := flag.Args(); len(lText) != 0 {
 		text = strings.Join(lText[:], " ")
-	} else if (f.Size() > 0) || (f.Mode() & os.ModeNamedPipe != 0) {
+	} else if (f.Size() > 0) || (f.Mode()&os.ModeNamedPipe != 0) {
 		// TODO: eventually strip newlines
 		bytes, err := ioutil.ReadAll(os.Stdin)
 		if err != nil {
 			log.Fatal("Cannot read from STDIN")
 		}
 		text = string(bytes)
-	}  else {
+	} else {
 		log.Fatal("You must specify some text")
 	}
 
@@ -96,5 +116,7 @@ func main() {
 	config := LoadConfig(configFile)
 	tags := strings.Split(*flagTag, ",")
 
-	fmt.Println(config.ServerUrl, tags, text)
+	log.Println(config.ServerUrl, tags, text)
+	code, _ := PerformRequest(config.ServerUrl, text)
+	fmt.Println(code)
 }
