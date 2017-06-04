@@ -90,6 +90,16 @@ func main() {
 		log.SetOutput(ioutil.Discard)
 	}
 
+	configFile, err := GetConfigurationFile(configFlag)
+	if err != nil {
+		log.Fatal("Cannot get configuration!")
+	}
+	log.Println("Using configuration file: ", configFile)
+	config := LoadConfig(configFile)
+	tags := strings.Split(*flagTag, ",")
+
+	log.Println(config.ServerUrl, tags, text)
+	
 	f, err := os.Stdin.Stat()
 	if err != nil {
 		log.Fatal("Stat() error", err)
@@ -105,18 +115,10 @@ func main() {
 		}
 		text = string(bytes)
 	} else {
-		log.Fatal("You must specify some text")
+		fmt.Println("You must specify some text")
+		os.Exit(1)
 	}
 
-	configFile, err := GetConfigurationFile(configFlag)
-	if err != nil {
-		log.Fatal("Cannot get configuration!")
-	}
-	log.Println("Using configuration file: ", configFile)
-	config := LoadConfig(configFile)
-	tags := strings.Split(*flagTag, ",")
-
-	log.Println(config.ServerUrl, tags, text)
 	code, _ := PerformRequest(config.ServerUrl, text)
 	fmt.Println(code)
 }
